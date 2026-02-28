@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Tracker — Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f0e8;--ink:#0f0e0b;--muted:#8a8478;--border:#d8d2c6;
+  --card:#fff;--red:#e8341a;--green:#1a9e5c;--blue:#1a5ce8;--yellow:#f5c518;--pink:#ff4d8f;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;}
+header{background:var(--ink);color:var(--bg);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.05em;line-height:1;}
+.logo span{color:var(--pink);}
+.header-meta{font-size:.8rem;color:#888;font-family:'DM Mono',monospace;}
+nav{background:var(--ink);border-top:1px solid #222;display:flex;padding:0 2rem;}
+.nav-btn{background:none;border:none;color:#666;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;padding:.8rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.nav-btn:hover{color:var(--bg);}
+.nav-btn.active{color:var(--pink);border-bottom-color:var(--pink);}
+.page{display:none;padding:2rem;max-width:1100px;margin:0 auto;}
+.page.active{display:block;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem;}
+.kpi{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:1.2rem 1.4rem;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi.k-red::before{background:var(--red);}.kpi.k-green::before{background:var(--green);}
+.kpi.k-blue::before{background:var(--blue);}.kpi.k-pink::before{background:var(--pink);}
+.kpi.k-yellow::before{background:var(--yellow);}
+.kpi-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;}
+.kpi-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;}
+.kpi-sub{font-size:.72rem;color:var(--muted);margin-top:.2rem;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.05em;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2rem;}
+.insight-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:1.2rem 1.4rem;}
+.insight-card h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.8rem;}
+.insight-item{display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem;}
+.insight-item:last-child{border-bottom:none;}
+.insight-bar-wrap{display:flex;align-items:center;gap:.6rem;}
+.insight-bar{height:6px;border-radius:3px;background:var(--pink);}
+.insight-num{font-family:'DM Mono',monospace;font-size:.8rem;color:var(--muted);}
+.table-wrap{background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead{background:var(--ink);color:var(--bg);}
+th{padding:.8rem 1rem;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;}
+td{padding:.75rem 1rem;font-size:.85rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#faf8f4;}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:600;}
+.badge-solo{background:#fde8e4;color:var(--red);}
+.badge-duo{background:#e4eefe;color:var(--blue);}
+.badge-groupe{background:#e4f5ec;color:var(--green);}
+.badge-interieur{background:#f5f0e8;color:var(--muted);border:1px solid var(--border);}
+.badge-exterieur{background:#e4f5ec;color:var(--green);}
+.badge-studio{background:#f0e4fe;color:#7b2fe8;}
+.viral{color:var(--green);font-weight:600;}
+.medium{color:var(--blue);}
+.low{color:var(--muted);}
+.action-btns{display:flex;gap:4px;}
+.edit-btn,.del-btn{border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.78rem;font-weight:600;transition:all .15s;border:1.5px solid var(--border);background:none;color:var(--muted);}
+.edit-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.del-btn:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.form-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:2rem;max-width:700px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+.form-full{grid-column:1/-1;}
+.field label{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem;}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:.6rem .9rem;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--ink);transition:border-color .2s;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--pink);}
+.field textarea{resize:vertical;min-height:70px;}
+.submit-btn{background:var(--ink);color:var(--bg);border:none;border-radius:10px;padding:.85rem 2rem;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.08em;cursor:pointer;transition:all .15s;margin-top:.5rem;}
+.submit-btn:hover{background:var(--pink);transform:translateY(-1px);}
+.filter-bar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem;align-items:center;}
+.filter-bar label{font-size:.78rem;color:var(--muted);font-weight:600;}
+.filter-select{background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--ink);cursor:pointer;}
+.empty{text-align:center;padding:3rem;color:var(--muted);}
+.empty .big{font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:.5rem;}
+@media(max-width:700px){header{padding:1rem;}.logo{font-size:1.4rem;}nav{padding:0 .5rem;overflow-x:auto;}.nav-btn{padding:.7rem .8rem;font-size:.78rem;}.page{padding:1rem;}.kpi-row{grid-template-columns:1fr 1fr;}.kpi{padding:.9rem 1rem;}.kpi-val{font-size:1.5rem;}.insights-grid{grid-template-columns:1fr;}.perf-grid{grid-template-columns:1fr 1fr;}.vs-row{flex-direction:column;}.table-wrap{overflow-x:auto;}table{min-width:550px;}.chart-card{padding:1rem;}.form-grid{grid-template-columns:1fr;}.form-card{padding:1.2rem;}.filter-bar{gap:.4rem;}.sec-title{font-size:1.1rem;}.modal{padding:1.2rem;}}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,14,11,.7);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;animation:slideUp .25s cubic-bezier(.17,.67,.42,1.1);}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.05em;}
+.modal-close{background:none;border:1.5px solid var(--border);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.modal-close:hover{background:var(--ink);color:var(--bg);}
+.btn-save{background:var(--pink);color:#fff;border:none;border-radius:10px;padding:.75rem 1.8rem;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.08em;cursor:pointer;transition:all .15s;margin-top:.5rem;}
+.btn-save:hover{filter:brightness(1.1);}
+#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);color:var(--bg);padding:.8rem 1.6rem;border-radius:100px;font-size:.85rem;font-weight:600;transition:transform .3s cubic-bezier(.17,.67,.42,1.3);z-index:999;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── CHART ── */
+.chart-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:1.4rem 1.6rem;margin-bottom:2rem;}
+.chart-card h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:1.2rem;}
+.chart-wrap{position:relative;width:100%;overflow-x:auto;}
+canvas{display:block;}
+
+/* ── PERF CARDS ── */
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;}
+.perf-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:1.2rem 1.4rem;}
+.perf-card .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.5rem;}
+.perf-card .val{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;line-height:1;margin-bottom:.3rem;}
+.perf-card .sub{font-size:.8rem;color:var(--muted);}
+.perf-card.good .val{color:var(--green);}
+.perf-card.warn .val{color:var(--yellow);}
+.perf-card.bad .val{color:var(--red);}
+
+/* ── DERNIÈRES VS MOYENNE ── */
+.vs-row{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;}
+.vs-card{flex:1;min-width:180px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:1.2rem;}
+.vs-card .vs-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem;}
+.vs-card .vs-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;}
+.vs-card .vs-diff{font-size:.8rem;margin-top:.3rem;font-weight:600;}
+.vs-diff.up{color:var(--green);}
+.vs-diff.down{color:var(--red);}
+.vs-diff.eq{color:var(--muted);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">TikTok <span>Studio</span> Tracker</div>
+  <div class="header-meta" id="header-count">0 vidéos</div>
+</header>
+<nav>
+  <button class="nav-btn active" onclick="showPage('dashboard')">📊 Dashboard</button>
+  <button class="nav-btn" onclick="showPage('videos')">🎬 Mes Vidéos</button>
+  <button class="nav-btn" onclick="showPage('add')">＋ Ajouter</button>
+</nav>
+
+<div class="page active" id="page-dashboard">
+  <div style="height:1.5rem"></div>
+  <div class="kpi-row" id="kpi-row"></div>
+  <div class="sec-title">⚡ Performance & Progression</div>
+  <div class="perf-grid" id="perf-grid"></div>
+  <div class="sec-title">🔄 3 dernières vidéos vs moyenne</div>
+  <div class="vs-row" id="vs-row"></div>
+  <div class="sec-title">📈 Courbe des vues dans le temps</div>
+  <div class="chart-card">
+    <h4>Vues par vidéo (ordre chronologique) — ligne rouge = moyenne</h4>
+    <div class="chart-wrap"><canvas id="chart-vues" height="220"></canvas></div>
+  </div>
+  <div id="analytics-section"></div>
+  <div class="sec-title">🔥 Ce qui cartonne</div>
+  <div class="insights-grid" id="insights-grid"></div>
+  <div class="sec-title">📈 Top 5 vidéos</div>
+  <div id="top5"></div>
+</div>
+
+<div class="page" id="page-videos">
+  <div style="height:1.5rem"></div>
+  <div class="filter-bar">
+    <label>Filtrer :</label>
+    <select class="filter-select" id="filter-casting" onchange="renderVideos()">
+      <option value="">Tous castings</option><option value="solo">Solo</option>
+      <option value="duo">Duo</option><option value="groupe">Groupe</option>
+    </select>
+    <select class="filter-select" id="filter-lieu" onchange="renderVideos()">
+      <option value="">Tous lieux</option><option value="intérieur">Intérieur</option>
+      <option value="extérieur">Extérieur</option><option value="studio">Studio</option>
+    </select>
+    <select class="filter-select" id="filter-sort" onchange="renderVideos()">
+      <option value="date">Plus récentes</option><option value="vues">Plus vues</option>
+      <option value="likes">Plus likées</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Titre / Thème</th><th>Casting</th><th>Lieu</th><th>Durée</th><th>Vues</th><th>Likes</th><th>Partages</th><th>Actions</th></tr></thead>
+      <tbody id="videos-tbody"></tbody>
+    </table>
+  </div>
+  <div id="videos-empty" class="empty" style="display:none">
+    <div class="big">Aucune vidéo encore</div><p>Ajoutez votre première vidéo !</p>
+  </div>
+</div>
+
+<div class="page" id="page-add">
+  <div style="height:1.5rem"></div>
+  <div class="form-card">
+    <div class="sec-title" style="margin-bottom:1.5rem">Nouvelle vidéo</div>
+    <div class="form-grid">
+      <div class="field form-full"><label>Titre / Thème</label><input type="text" id="f-titre" placeholder="ex: Le pain, Le wifi…"/></div>
+      <div class="field"><label>Casting</label><select id="f-casting"><option value="solo">Solo</option><option value="duo">Duo</option><option value="groupe">Groupe</option></select></div>
+      <div class="field"><label>Lieu</label><select id="f-lieu"><option value="intérieur">Intérieur</option><option value="extérieur">Extérieur</option><option value="studio">Studio</option></select></div>
+      <div class="field"><label>Durée (secondes)</label><input type="number" id="f-duree" placeholder="ex: 60" min="1"/></div>
+      <div class="field"><label>Date</label><input type="date" id="f-date"/></div>
+      <div class="field"><label>👁 Vues</label><input type="number" id="f-vues" placeholder="ex: 12500" min="0"/></div>
+      <div class="field"><label>❤️ Likes</label><input type="number" id="f-likes" placeholder="ex: 850" min="0"/></div>
+      <div class="field"><label>🔁 Partages</label><input type="number" id="f-partages" placeholder="ex: 120" min="0"/></div>
+      <div class="field form-full"><label>Notes</label><textarea id="f-notes" placeholder="Ce qui a bien marché…"></textarea></div>
+    </div>
+    <button class="submit-btn" onclick="addVideo()">＋ ENREGISTRER LA VIDÉO</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✏️ Modifier la vidéo</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="field form-full"><label>Titre</label><input type="text" id="e-titre"/></div>
+      <div class="field"><label>Casting</label><select id="e-casting"><option value="solo">Solo</option><option value="duo">Duo</option><option value="groupe">Groupe</option></select></div>
+      <div class="field"><label>Lieu</label><select id="e-lieu"><option value="intérieur">Intérieur</option><option value="extérieur">Extérieur</option><option value="studio">Studio</option></select></div>
+      <div class="field"><label>Durée (s)</label><input type="number" id="e-duree" min="1"/></div>
+      <div class="field"><label>Date</label><input type="date" id="e-date"/></div>
+      <div class="field"><label>👁 Vues</label><input type="number" id="e-vues" min="0"/></div>
+      <div class="field"><label>❤️ Likes</label><input type="number" id="e-likes" min="0"/></div>
+      <div class="field"><label>🔁 Partages</label><input type="number" id="e-partages" min="0"/></div>
+      <div class="field form-full"><label>Notes</label><textarea id="e-notes"></textarea></div>
+    </div>
+    <button class="btn-save" onclick="saveEdit()">✓ ENREGISTRER</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+var videos = [
+  {id:1,  titre:"L'objet perdu",   casting:"solo",   lieu:"intérieur", duree:98,  date:"2025-07-09", vues:10200,  likes:420,   partages:66,   notes:""},
+  {id:2,  titre:"L'évasion",       casting:"groupe", lieu:"intérieur", duree:88,  date:"2025-07-14", vues:13100,  likes:413,   partages:66,   notes:""},
+  {id:3,  titre:"La monnaie",      casting:"groupe", lieu:"intérieur", duree:27,  date:"2025-07-16", vues:12900,  likes:379,   partages:31,   notes:""},
+  {id:4,  titre:"Les huissiers",   casting:"groupe", lieu:"intérieur", duree:105, date:"2025-07-20", vues:13300,  likes:483,   partages:31,   notes:""},
+  {id:5,  titre:"La pizza",        casting:"duo",    lieu:"intérieur", duree:25,  date:"2025-07-23", vues:12400,  likes:351,   partages:33,   notes:"Touche pas a ma pizza hein"},
+  {id:6,  titre:"L'école",         casting:"groupe", lieu:"intérieur", duree:135, date:"2025-07-27", vues:560700, likes:86100, partages:1200, notes:"Notre meilleure vidéo !"},
+  {id:7,  titre:"Apple pay",       casting:"groupe", lieu:"intérieur", duree:90,  date:"2025-08-03", vues:11100,  likes:190,   partages:54,   notes:""},
+  {id:8,  titre:"La manette",      casting:"groupe", lieu:"intérieur", duree:20,  date:"2025-08-06", vues:7900,   likes:241,   partages:40,   notes:""},
+  {id:9,  titre:"Le traitre",      casting:"groupe", lieu:"intérieur", duree:131, date:"2025-08-24", vues:14500,  likes:1300,  partages:15,   notes:""},
+  {id:10, titre:"La télécommande", casting:"duo",    lieu:"intérieur", duree:35,  date:"2025-08-27", vues:3300,   likes:170,   partages:15,   notes:""},
+  {id:11, titre:"Le supérieur",    casting:"groupe", lieu:"intérieur", duree:158, date:"2025-08-31", vues:78900,  likes:7600,  partages:70,   notes:""},
+  {id:12, titre:"La fraude",       casting:"groupe", lieu:"extérieur", duree:43,  date:"2025-09-07", vues:28300,  likes:1500,  partages:29,   notes:""},
+  {id:13, titre:"Le mail",         casting:"groupe", lieu:"intérieur", duree:70,  date:"2025-09-14", vues:39000,  likes:4400,  partages:31,   notes:""},
+  {id:14, titre:"Le combat",       casting:"groupe", lieu:"intérieur", duree:103, date:"2025-09-17", vues:45200,  likes:583,   partages:43,   notes:""},
+  {id:15, titre:"Le wifi",         casting:"groupe", lieu:"intérieur", duree:49,  date:"2025-10-20", vues:75800,  likes:4300,  partages:66,   notes:""},
+  {id:16, titre:"Halloween",       casting:"groupe", lieu:"studio",    duree:143, date:"2025-10-29", vues:12900,  likes:694,   partages:25,   notes:""},
+  {id:17, titre:"Le pain",         casting:"groupe", lieu:"intérieur", duree:75,  date:"2025-11-02", vues:140000, likes:11600, partages:105,  notes:""},
+  {id:18, titre:"L'examen",        casting:"groupe", lieu:"intérieur", duree:50,  date:"2025-11-09", vues:6200,   likes:245,   partages:28,   notes:""},
+  {id:19, titre:"Le date",         casting:"groupe", lieu:"intérieur", duree:87,  date:"2025-11-28", vues:3000,   likes:70,    partages:7,    notes:""},
+];
+var nextId = 20;
+var editingId = null;
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn')[['dashboard','videos','add'].indexOf(name)].classList.add('active');
+  if(name==='dashboard') renderDashboard();
+  if(name==='videos') renderVideos();
+}
+
+function fmt(n){
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=1000) return (n/1000).toFixed(1)+'k';
+  return String(n);
+}
+function engRate(v){return v.vues?((v.likes+v.partages)/v.vues*100):0;}
+function viralClass(vues){return vues>=50000?'viral':vues>=10000?'medium':'low';}
+function badgeCasting(c){var m={solo:'badge-solo',duo:'badge-duo',groupe:'badge-groupe'};return '<span class="badge '+(m[c]||'')+'">'+c+'</span>';}
+function badgeLieu(l){var m={'intérieur':'badge-interieur','extérieur':'badge-exterieur','studio':'badge-studio'};return '<span class="badge '+(m[l]||'')+'">'+l+'</span>';}
+function updateHeaderCount(){document.getElementById('header-count').textContent=videos.length+' vidéo'+(videos.length>1?'s':'');}
+
+function sorted(){
+  return videos.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+}
+
+function renderDashboard(){
+  updateHeaderCount();
+  var sv = sorted();
+  var tv=sv.reduce(function(s,v){return s+v.vues;},0);
+  var tl=sv.reduce(function(s,v){return s+v.likes;},0);
+  var tp=sv.reduce(function(s,v){return s+v.partages;},0);
+  var ae=sv.length?(sv.reduce(function(s,v){return s+engRate(v);},0)/sv.length).toFixed(1):0;
+  var best=sv.length?sv.reduce(function(a,b){return a.vues>b.vues?a:b;}):null;
+  var avgVues = sv.length ? Math.round(tv/sv.length) : 0;
+
+  document.getElementById('kpi-row').innerHTML=
+    '<div class="kpi k-pink"><div class="kpi-label">Total Vues</div><div class="kpi-val">'+fmt(tv)+'</div><div class="kpi-sub">'+sv.length+' vidéos</div></div>'+
+    '<div class="kpi k-red"><div class="kpi-label">Total Likes</div><div class="kpi-val">'+fmt(tl)+'</div></div>'+
+    '<div class="kpi k-blue"><div class="kpi-label">Partages</div><div class="kpi-val">'+fmt(tp)+'</div></div>'+
+    '<div class="kpi k-green"><div class="kpi-label">Moy. Vues</div><div class="kpi-val">'+fmt(avgVues)+'</div><div class="kpi-sub">par vidéo</div></div>'+
+    '<div class="kpi k-yellow"><div class="kpi-label">Meilleure</div><div class="kpi-val" style="font-size:.95rem;line-height:1.3">'+(best?best.titre.substring(0,18)+'…':'—')+'</div><div class="kpi-sub">'+(best?fmt(best.vues)+' vues':'')+'</div></div>';
+
+  // ── PERF CARDS ──
+  var first50 = null, first100 = null;
+  for(var i=0;i<sv.length;i++){
+    if(!first50 && sv[i].vues>=50000) first50 = {n:i+1, titre:sv[i].titre};
+    if(!first100 && sv[i].vues>=100000) first100 = {n:i+1, titre:sv[i].titre};
+  }
+  var aboveMoy = sv.filter(function(v){return v.vues>=avgVues;}).length;
+  var scorePct = sv.length ? Math.round(aboveMoy/sv.length*100) : 0;
+  var scoreClass = scorePct>=50?'good':scorePct>=30?'warn':'bad';
+
+  document.getElementById('perf-grid').innerHTML=
+    '<div class="perf-card '+(first50?'good':'bad')+'"><div class="label">⚡ 1ère vidéo +50k vues</div><div class="val">'+(first50?'Vidéo #'+first50.n:'Pas encore')+'</div><div class="sub">'+(first50?first50.titre:'Continuez !')+'</div></div>'+
+    '<div class="perf-card '+(first100?'good':'warn')+'"><div class="label">🚀 1ère vidéo +100k vues</div><div class="val">'+(first100?'Vidéo #'+first100.n:'Pas encore')+'</div><div class="sub">'+(first100?first100.titre:'Bientôt !')+'</div></div>'+
+    '<div class="perf-card '+scoreClass+'"><div class="label">📊 Score de régularité</div><div class="val">'+scorePct+'%</div><div class="sub">'+aboveMoy+' vidéos sur '+sv.length+' au-dessus de la moyenne ('+fmt(avgVues)+')</div></div>'+
+    '<div class="perf-card"><div class="label">📈 Progression</div><div class="val">'+function(){var h=sv.slice(-5);var l=sv.slice(0,5);var ah=h.reduce(function(s,v){return s+v.vues;},0)/h.length;var al=l.reduce(function(s,v){return s+v.vues;},0)/l.length;var d=Math.round((ah-al)/al*100);return (d>=0?'+':'')+d+'%';}()+'</div><div class="sub">Moy. 5 dernières vs 5 premières</div></div>';
+
+  // ── 3 DERNIÈRES VS MOYENNE ──
+  var last3 = sv.slice(-3).reverse();
+  var vsHtml = '';
+  last3.forEach(function(v){
+    var diff = avgVues ? Math.round((v.vues - avgVues)/avgVues*100) : 0;
+    var cls = diff>=10?'up':diff<=-10?'down':'eq';
+    var arrow = diff>=10?'↑':diff<=-10?'↓':'→';
+    vsHtml += '<div class="vs-card"><div class="vs-title">'+v.titre+'</div><div class="vs-val">'+fmt(v.vues)+'</div><div class="vs-diff '+cls+'">'+arrow+' '+(diff>=0?'+':'')+diff+'% vs moyenne</div></div>';
+  });
+  vsHtml += '<div class="vs-card" style="border-color:var(--border);background:#faf8f4"><div class="vs-title">Moyenne générale</div><div class="vs-val" style="color:var(--muted)">'+fmt(avgVues)+'</div><div class="sub" style="font-size:.8rem;color:var(--muted);margin-top:.3rem">sur '+sv.length+' vidéos</div></div>';
+  document.getElementById('vs-row').innerHTML = vsHtml;
+
+  // ── CHART ──
+  renderChart(sv, avgVues);
+
+  // ── ANALYTICS ──
+  renderAnalytics(sv);
+
+  // ── INSIGHTS ──
+  if(sv.length<2){document.getElementById('insights-grid').innerHTML='<p style="color:var(--muted)">Ajoutez au moins 2 vidéos !</p>';}
+  else{
+    var cm={},lm={},dB={'< 20s':0,'20-40s':0,'40-60s':0,'> 60s':0},dBV={'< 20s':0,'20-40s':0,'40-60s':0,'> 60s':0};
+    sv.forEach(function(v){
+      if(!cm[v.casting]) cm[v.casting]={count:0,vues:0}; cm[v.casting].count++; cm[v.casting].vues+=v.vues;
+      if(!lm[v.lieu]) lm[v.lieu]={count:0,vues:0}; lm[v.lieu].count++; lm[v.lieu].vues+=v.vues;
+      var k=v.duree<20?'< 20s':v.duree<40?'20-40s':v.duree<60?'40-60s':'> 60s'; dB[k]++; dBV[k]+=v.vues;
+    });
+    var maxC=Math.max.apply(null,Object.values(cm).map(function(x){return x.vues;}));
+    var maxL=Math.max.apply(null,Object.values(lm).map(function(x){return x.vues;}));
+    var maxD=Math.max.apply(null,Object.values(dBV));
+    function rows(map,maxV,color){
+      return Object.entries(map).sort(function(a,b){return b[1].vues-a[1].vues;}).map(function(e){
+        var pct=maxV?Math.round(e[1].vues/maxV*100):0;
+        return '<div class="insight-item"><span>'+e[0]+' <span style="color:var(--muted);font-size:.75rem">('+e[1].count+' vidéo'+(e[1].count>1?'s':'')+')</span></span><div class="insight-bar-wrap"><div class="insight-bar" style="width:'+pct+'px;max-width:80px;background:'+color+'"></div><span class="insight-num">'+fmt(e[1].vues)+'</span></div></div>';
+      }).join('');
+    }
+    var dRows=Object.entries(dBV).filter(function(e){return dB[e[0]]>0;}).sort(function(a,b){return b[1]-a[1];}).map(function(e){
+      var pct=maxD?Math.round(e[1]/maxD*100):0;
+      return '<div class="insight-item"><span>'+e[0]+' <span style="color:var(--muted);font-size:.75rem">('+dB[e[0]]+' vidéo'+(dB[e[0]]>1?'s':'')+')</span></span><div class="insight-bar-wrap"><div class="insight-bar" style="width:'+pct+'px;max-width:80px;background:var(--green)"></div><span class="insight-num">'+fmt(e[1])+'</span></div></div>';
+    }).join('');
+    document.getElementById('insights-grid').innerHTML=
+      '<div class="insight-card"><h4>🎭 Casting → Vues</h4>'+rows(cm,maxC,'var(--pink)')+'</div>'+
+      '<div class="insight-card"><h4>📍 Lieu → Vues</h4>'+rows(lm,maxL,'var(--blue)')+'</div>'+
+      '<div class="insight-card"><h4>⏱ Durée → Vues</h4>'+dRows+'</div>';
+  }
+
+  // ── TOP 5 ──
+  var top=sv.slice().sort(function(a,b){return b.vues-a.vues;}).slice(0,5);
+  document.getElementById('top5').innerHTML=top.length?'<div class="table-wrap"><table><thead><tr><th>#</th><th>Titre</th><th>Casting</th><th>Lieu</th><th>Vues</th><th>Eng.</th></tr></thead><tbody>'+
+    top.map(function(v,i){return '<tr><td style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:var(--muted)">'+(i+1)+'</td><td>'+v.titre+'</td><td>'+badgeCasting(v.casting)+'</td><td>'+badgeLieu(v.lieu)+'</td><td class="'+viralClass(v.vues)+'">'+fmt(v.vues)+'</td><td style="font-family:\'DM Mono\',monospace;font-size:.82rem">'+engRate(v).toFixed(1)+'%</td></tr>';}).join('')+
+    '</tbody></table></div>':'';
+}
+
+// ── CHART ──────────────────────────────────────────────
+function renderChart(sv, avgVues){
+  var canvas = document.getElementById('chart-vues');
+  var W = canvas.parentElement.offsetWidth || 700;
+  canvas.width = W; canvas.height = 220;
+  var ctx = canvas.getContext('2d');
+  var pad = {top:20, right:20, bottom:50, left:60};
+  var cw = W - pad.left - pad.right;
+  var ch = 220 - pad.top - pad.bottom;
+  var maxV = Math.max.apply(null, sv.map(function(v){return v.vues;}));
+  var n = sv.length;
+
+  ctx.clearRect(0,0,W,220);
+
+  // grid lines
+  ctx.strokeStyle='#e8e2d8'; ctx.lineWidth=1;
+  for(var g=0;g<=4;g++){
+    var gy = pad.top + ch - (g/4)*ch;
+    ctx.beginPath(); ctx.moveTo(pad.left,gy); ctx.lineTo(pad.left+cw,gy); ctx.stroke();
+    ctx.fillStyle='#8a8478'; ctx.font='10px DM Mono,monospace'; ctx.textAlign='right';
+    ctx.fillText(fmt(Math.round(maxV*g/4)), pad.left-6, gy+4);
+  }
+
+  // moyenne line
+  var avgY = pad.top + ch - (avgVues/maxV)*ch;
+  ctx.strokeStyle='#e8341a'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(pad.left, avgY); ctx.lineTo(pad.left+cw, avgY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#e8341a'; ctx.font='bold 10px DM Mono,monospace'; ctx.textAlign='left';
+  ctx.fillText('moy. '+fmt(avgVues), pad.left+4, avgY-5);
+
+  // area fill
+  var grad = ctx.createLinearGradient(0, pad.top, 0, pad.top+ch);
+  grad.addColorStop(0,'rgba(255,77,143,0.25)');
+  grad.addColorStop(1,'rgba(255,77,143,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  sv.forEach(function(v,i){
+    var x = pad.left + (i/(n-1))*cw;
+    var y = pad.top + ch - (v.vues/maxV)*ch;
+    if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(pad.left+cw, pad.top+ch);
+  ctx.lineTo(pad.left, pad.top+ch);
+  ctx.closePath(); ctx.fill();
+
+  // line
+  ctx.strokeStyle='#ff4d8f'; ctx.lineWidth=2.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  sv.forEach(function(v,i){
+    var x = pad.left + (n>1?(i/(n-1))*cw:cw/2);
+    var y = pad.top + ch - (v.vues/maxV)*ch;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // dots + labels
+  sv.forEach(function(v,i){
+    var x = pad.left + (n>1?(i/(n-1))*cw:cw/2);
+    var y = pad.top + ch - (v.vues/maxV)*ch;
+    ctx.beginPath();
+    ctx.arc(x, y, v.vues>=50000?6:4, 0, Math.PI*2);
+    ctx.fillStyle = v.vues>=50000?'#1a9e5c':'#ff4d8f';
+    ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+
+    // x label
+    ctx.fillStyle='#8a8478'; ctx.font='9px DM Mono,monospace'; ctx.textAlign='center';
+    var short = v.titre.split(' ').slice(0,2).join(' ');
+    ctx.fillText(short, x, 220-pad.bottom+14);
+
+    // value on top for high ones
+    if(v.vues>=50000){
+      ctx.fillStyle='#0f0e0b'; ctx.font='bold 10px DM Mono,monospace';
+      ctx.fillText(fmt(v.vues), x, y-12);
+    }
+  });
+}
+
+// ── ANALYTICS ──────────────────────────────────────────
+function renderAnalytics(sv) {
+  var HIT = 50000, FLOP = 15000;
+
+  // ── FLOP/HIT SEQUENCE ──
+  var seqHtml = '<div class="chart-card" style="margin-bottom:2rem"><h4>Chaque barre = une vidéo — 💀 flop / 😐 moyen / 🔥 hit</h4><div style="display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end;padding-top:.5rem">';
+  var flopCount = 0, flopBeforeHit = [];
+  sv.forEach(function(v, i){
+    var isHit = v.vues >= HIT, isFlop = v.vues < FLOP;
+    if(isHit){ flopBeforeHit.push(flopCount); flopCount=0; } else { flopCount++; }
+    var h = Math.max(24, Math.min(80, Math.round(v.vues/HIT*80)));
+    var bg = isHit?'var(--green)':isFlop?'#fde8e4':'rgba(245,197,24,.3)';
+    var border = isHit?'var(--green)':isFlop?'var(--red)':'var(--yellow)';
+    var textColor = isHit?'#fff':isFlop?'var(--red)':'#0f0e0b';
+    var emoji = isHit?'🔥':isFlop?'💀':'😐';
+    var short = v.titre.split(' ').slice(0,2).join(' ');
+    seqHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:4px" title="'+v.titre+' — '+fmt(v.vues)+' vues">';
+    seqHtml += '<div style="font-size:.65rem;color:var(--muted);font-family:\'DM Mono\',monospace">'+(i+1)+'</div>';
+    seqHtml += '<div style="width:38px;height:'+h+'px;background:'+bg+';border:2px solid '+border+';border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:'+(isHit?'1.1':'0.85')+'rem">'+emoji+'</div>';
+    seqHtml += '<div style="font-size:.62rem;color:'+textColor+';text-align:center;max-width:38px;line-height:1.2;font-weight:'+(isHit?'700':'400')+'">'+short+'</div>';
+    seqHtml += '</div>';
+  });
+  seqHtml += '</div>';
+  var avgFlops = flopBeforeHit.length?(flopBeforeHit.reduce(function(s,n){return s+n;},0)/flopBeforeHit.length).toFixed(1):'—';
+  seqHtml += '<div style="margin-top:1rem;padding:.8rem 1rem;background:var(--bg);border-radius:8px;display:flex;gap:2rem;flex-wrap:wrap">';
+  seqHtml += '<div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Moy. flops avant un hit</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem;color:var(--pink)">'+avgFlops+'</div></div>';
+  seqHtml += '<div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Hits</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem;color:var(--green)">'+flopBeforeHit.length+'</div></div>';
+  seqHtml += '<div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Flops</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem;color:var(--red)">'+sv.filter(function(v){return v.vues<FLOP;}).length+'</div></div>';
+  seqHtml += '<div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Séquences</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1rem;color:var(--ink);line-height:1.6">'+flopBeforeHit.map(function(n){return n+' flop'+(n>1?'s':'')+'→🔥';}).join(' · ')+'</div></div>';
+  seqHtml += '</div></div>';
+
+  // ── MOMENTUM ──
+  var momHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2rem">';
+  sv.forEach(function(v, i){
+    if(v.vues < HIT) return;
+    var before = i>0?sv[i-1]:null, after = i<sv.length-1?sv[i+1]:null;
+    var afterDiff = after?Math.round((after.vues-v.vues)/v.vues*100):null;
+    var afterColor = afterDiff===null?'var(--muted)':afterDiff<-30?'var(--red)':afterDiff>10?'var(--green)':'var(--muted)';
+    momHtml += '<div class="insight-card">';
+    momHtml += '<h4>🔥 '+v.titre+'</h4>';
+    momHtml += '<div class="insight-item"><span style="color:var(--muted);font-size:.82rem">Vidéo d\'avant</span><span style="font-size:.82rem">'+(before?before.titre+' <span style="font-family:\'DM Mono\',monospace">'+fmt(before.vues)+'</span>':'—')+'</span></div>';
+    momHtml += '<div class="insight-item"><span style="font-weight:700">Ce hit</span><span style="font-family:\'Bebas Neue\',sans-serif;font-size:1.3rem;color:var(--green)">'+fmt(v.vues)+'</span></div>';
+    momHtml += '<div class="insight-item"><span style="color:var(--muted);font-size:.82rem">Vidéo d\'après</span><span style="font-size:.82rem">'+(after?after.titre+' <span style="font-family:\'DM Mono\',monospace">'+fmt(after.vues)+'</span> <span style="color:'+afterColor+';font-weight:700">'+(afterDiff!==null?(afterDiff>0?'+':'')+afterDiff+'%':'')+'</span>':'—')+'</span></div>';
+    momHtml += '</div>';
+  });
+  momHtml += '</div>';
+
+  // ── VÉLOCITÉ ──
+  var gaps = [];
+  for(var i=1;i<sv.length;i++){ var d1=new Date(sv[i-1].date),d2=new Date(sv[i].date); gaps.push(Math.round((d2-d1)/(1000*60*60*24))); }
+  var avgGap = gaps.length?Math.round(gaps.reduce(function(s,g){return s+g;},0)/gaps.length):0;
+  var velHtml = '<div class="chart-card" style="margin-bottom:2rem"><h4>Délai entre chaque vidéo — vert = régulier · jaune = pause · rouge = longue pause</h4><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">';
+  velHtml += '<thead style="background:var(--ink);color:var(--bg)"><tr><th style="padding:.6rem 1rem;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em">Vidéo</th><th style="padding:.6rem 1rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em">Délai</th><th style="padding:.6rem 1rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em">Type</th><th style="padding:.6rem 1rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em">Vues</th></tr></thead><tbody>';
+  var pauseStats = [];
+  for(var i=1;i<sv.length;i++){
+    var d1=new Date(sv[i-1].date),d2=new Date(sv[i].date);
+    var gap=Math.round((d2-d1)/(1000*60*60*24));
+    var isLong=gap>=25, isPause=gap>=14;
+    if(isPause) pauseStats.push({titre:sv[i].titre,gap:gap,vues:sv[i].vues});
+    var typeLabel = isLong?'<span style="color:var(--red);font-weight:700">⚠️ Longue pause ('+gap+'j)</span>':isPause?'<span style="color:var(--yellow);font-weight:700">⚡ Pause ('+gap+'j)</span>':'<span style="color:var(--green)">✓ Régulier</span>';
+    var rowBg = isLong?'rgba(232,52,26,.05)':isPause?'rgba(245,197,24,.07)':'';
+    velHtml += '<tr style="background:'+rowBg+';border-bottom:1px solid var(--border)">';
+    velHtml += '<td style="padding:.6rem 1rem;font-size:.85rem"><strong>'+sv[i].titre+'</strong><span style="color:var(--muted);font-size:.78rem;margin-left:.5rem">après '+sv[i-1].titre+'</span></td>';
+    velHtml += '<td style="padding:.6rem 1rem;font-family:\'DM Mono\',monospace;font-size:.9rem;font-weight:700">'+gap+'j</td>';
+    velHtml += '<td style="padding:.6rem 1rem;font-size:.82rem">'+typeLabel+'</td>';
+    velHtml += '<td style="padding:.6rem 1rem;font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:'+(sv[i].vues>=HIT?'var(--green)':sv[i].vues<FLOP?'var(--red)':'var(--blue)')+'">'+fmt(sv[i].vues)+'</td>';
+    velHtml += '</tr>';
+  }
+  velHtml += '</tbody></table>';
+  velHtml += '<div style="margin-top:1rem;padding:.8rem 1rem;background:var(--bg);border-radius:8px;display:flex;gap:2rem;flex-wrap:wrap">';
+  velHtml += '<div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Intervalle moyen</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem">'+avgGap+'j</div></div>';
+  pauseStats.forEach(function(p){
+    velHtml += '<div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Retour après '+p.gap+'j</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6rem;color:'+(p.vues>=HIT?'var(--green)':p.vues<FLOP?'var(--red)':'var(--blue)')+'">'+fmt(p.vues)+'</div><div style="font-size:.75rem;color:var(--muted)">'+p.titre+'</div></div>';
+  });
+  velHtml += '</div></div>';
+
+  document.getElementById('analytics-section').innerHTML =
+    '<div class="sec-title">💀→🔥 Séquence Flop / Hit</div>' + seqHtml +
+    '<div class="sec-title">⚡ Momentum — impact d\'un hit sur la vidéo suivante</div>' + momHtml +
+    '<div class="sec-title">⏱ Vélocité de publication</div>' + velHtml;
+}
+
+// ── VIDEOS ──────────────────────────────────────────────
+function renderVideos(){
+  updateHeaderCount();
+  var casting=document.getElementById('filter-casting').value;
+  var lieu=document.getElementById('filter-lieu').value;
+  var sort=document.getElementById('filter-sort').value;
+  var filtered=videos.filter(function(v){return(!casting||v.casting===casting)&&(!lieu||v.lieu===lieu);});
+  if(sort==='vues') filtered.sort(function(a,b){return b.vues-a.vues;});
+  else if(sort==='likes') filtered.sort(function(a,b){return b.likes-a.likes;});
+  else filtered.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+  var tbody=document.getElementById('videos-tbody');
+  var empty=document.getElementById('videos-empty');
+  if(!filtered.length){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbody.innerHTML=filtered.map(function(v){
+    var note=v.notes?'<br><span style="color:var(--muted);font-size:.75rem">'+v.notes.substring(0,50)+(v.notes.length>50?'…':'')+'</span>':'';
+    return '<tr><td><strong>'+v.titre+'</strong>'+note+'</td><td>'+badgeCasting(v.casting)+'</td><td>'+badgeLieu(v.lieu)+'</td><td style="font-family:\'DM Mono\',monospace;font-size:.82rem">'+v.duree+'s</td><td class="'+viralClass(v.vues)+'">'+fmt(v.vues)+'</td><td>'+fmt(v.likes)+'</td><td>'+fmt(v.partages)+'</td><td><div class="action-btns"><button class="edit-btn" data-id="'+v.id+'">✏️</button><button class="del-btn" data-id="'+v.id+'">✕</button></div></td></tr>';
+  }).join('');
+  tbody.querySelectorAll('.del-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var id=parseInt(this.getAttribute('data-id'));
+      videos=videos.filter(function(v){return v.id!==id;});
+      renderVideos(); toast('🗑 Vidéo supprimée');
+    });
+  });
+  tbody.querySelectorAll('.edit-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){openEdit(parseInt(this.getAttribute('data-id')));});
+  });
+}
+
+function addVideo(){
+  var titre=document.getElementById('f-titre').value.trim();
+  var duree=parseInt(document.getElementById('f-duree').value);
+  if(!titre) return toast('⚠ Entrez un titre !');
+  if(!duree||duree<=0) return toast('⚠ Entrez une durée !');
+  videos.push({id:nextId++,titre:titre,casting:document.getElementById('f-casting').value,lieu:document.getElementById('f-lieu').value,duree:duree,date:document.getElementById('f-date').value||new Date().toISOString().split('T')[0],vues:parseInt(document.getElementById('f-vues').value)||0,likes:parseInt(document.getElementById('f-likes').value)||0,partages:parseInt(document.getElementById('f-partages').value)||0,notes:document.getElementById('f-notes').value.trim()});
+  ['f-titre','f-duree','f-vues','f-likes','f-partages','f-notes'].forEach(function(id){document.getElementById(id).value='';});
+  toast('✓ Vidéo ajoutée !'); showPage('dashboard');
+}
+
+function openEdit(id){
+  var v=null; for(var i=0;i<videos.length;i++){if(videos[i].id===id){v=videos[i];break;}}
+  if(!v) return; editingId=id;
+  document.getElementById('e-titre').value=v.titre;
+  document.getElementById('e-casting').value=v.casting;
+  document.getElementById('e-lieu').value=v.lieu;
+  document.getElementById('e-duree').value=v.duree;
+  document.getElementById('e-date').value=v.date;
+  document.getElementById('e-vues').value=v.vues;
+  document.getElementById('e-likes').value=v.likes;
+  document.getElementById('e-partages').value=v.partages;
+  document.getElementById('e-notes').value=v.notes||'';
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeModal(){document.getElementById('edit-modal').classList.remove('open');editingId=null;}
+function handleOverlayClick(e){if(e.target===document.getElementById('edit-modal'))closeModal();}
+function saveEdit(){
+  var v=null; for(var i=0;i<videos.length;i++){if(videos[i].id===editingId){v=videos[i];break;}}
+  if(!v) return;
+  var titre=document.getElementById('e-titre').value.trim();
+  if(!titre) return toast('⚠ Titre obligatoire !');
+  v.titre=titre; v.casting=document.getElementById('e-casting').value; v.lieu=document.getElementById('e-lieu').value;
+  v.duree=parseInt(document.getElementById('e-duree').value)||v.duree; v.date=document.getElementById('e-date').value||v.date;
+  v.vues=parseInt(document.getElementById('e-vues').value)||0; v.likes=parseInt(document.getElementById('e-likes').value)||0;
+  v.partages=parseInt(document.getElementById('e-partages').value)||0; v.notes=document.getElementById('e-notes').value.trim();
+  closeModal(); renderVideos(); toast('✓ Vidéo modifiée !');
+}
+function toast(msg){
+  var el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show');},2500);
+}
+
+document.getElementById('f-date').valueAsDate=new Date();
+renderDashboard();
+</script>
+</body>
+</html>
