@@ -50,8 +50,8 @@ export async function updateVideo(id, updates) {
       'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq' }, 
     body: JSON.stringify(updates) 
   }) 
-    .then(r => r.json()) 
-    .then(data => console.log(data))}
+    .then(r => r.ok) 
+    
 
 /**
  * Supprime une vidéo par son id
