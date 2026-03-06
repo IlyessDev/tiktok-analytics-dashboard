@@ -1,7 +1,7 @@
 # 📊 TikTok Analytics Dashboard
 
 Outil d'analyse de performance pour créateurs de contenu TikTok.  
-Développé en HTML5 / CSS3 / JavaScript vanilla — aucune dépendance externe.
+Connecté à une base de données en temps réel via Supabase.
 
 ## 🚀 Fonctionnalités
 
@@ -12,19 +12,20 @@ Développé en HTML5 / CSS3 / JavaScript vanilla — aucune dépendance externe.
 - **Courbe d'évolution** — graphique Canvas custom avec ligne de moyenne
 - **Insights automatiques** — analyse par casting, lieu, durée
 - **Interface responsive** — compatible mobile et desktop
-- **CRUD complet** — ajout, modification, suppression de vidéos
+- **CRUD complet** — ajout, modification, suppression de vidéos (persisté en BDD)
 
 ## 🛠 Technologies
 
 - HTML5 / CSS3
-- JavaScript ES5
+- JavaScript ES6 (modules)
 - Canvas API (graphiques custom)
+- Supabase (base de données PostgreSQL + API REST)
 - Google Fonts
 
 ## 💡 Contexte
 
 Projet personnel développé pour analyser et optimiser la stratégie de contenu d'une chaîne TikTok.  
-Les données sont analysées pour détecter des patterns de performance et guider les décisions de production.
+Les données sont stockées en base PostgreSQL et analysées pour détecter des patterns de performance.
 
 ## 📈 Aperçu des analyses
 
@@ -32,3 +33,4 @@ Les données sont analysées pour détecter des patterns de performance et guide
 - Momentum post-viral
 - Corrélation durée/vues, lieu/vues, casting/vues
 - Score de régularité
+- Vélocité et impact des pauses de publication
