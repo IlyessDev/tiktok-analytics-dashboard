@@ -41,7 +41,7 @@ export async function insertVideo(video) {
 /**
  * Met à jour une vidéo existante par son id
  */
-async function updateVideo(id, updates) { 
+export async function updateVideo(id, updates) { 
   return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos?id=eq.'+ id, { 
     method: 'PATCH', 
     headers: { 
@@ -56,7 +56,7 @@ async function updateVideo(id, updates) {
 /**
  * Supprime une vidéo par son id
  */
-async function deleteVideo(id) { 
+export async function deleteVideo(id) { 
   return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos?id=eq.'+ id, { 
     method: 'DELETE', 
     headers: { 
