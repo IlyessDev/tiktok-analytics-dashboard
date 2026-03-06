@@ -1,7 +1,7 @@
 /**
  * api.js
  * Toutes les fonctions qui communiquent avec Supabase
- * Aucune logique UI ici — uniquement les appels API
+ * uniquement les appels API
  */
 
 import { supabase } from './config.js';
@@ -13,7 +13,7 @@ export async function fetchVideos() {
   const { data, error } = await supabase
     .from('videos')
     .select('*')
-    .order('Date', { ascending: true });
+    .order('date', { ascending: true });
 
   if (error) {
     console.error('Erreur fetchVideos:', error.message);
