@@ -16,8 +16,8 @@ Connecté à une base de données en temps réel via Supabase.
 
 ## 🛠 Technologies
 
-- HTML5 / CSS3
-- JavaScript ES6 (modules)
+- HTML / CSS
+- JavaScript
 - Canvas API (graphiques custom)
 - Supabase (base de données PostgreSQL + API REST)
 - Google Fonts
