@@ -50,7 +50,7 @@ export async function updateVideo(id, updates) {
       'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq' }, 
     body: JSON.stringify(updates) 
   }) 
-    .then(r => r.ok) 
+ 
     
 
 /**
@@ -64,4 +64,4 @@ export async function deleteVideo(id) {
       'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq', 
       'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq' }
     }) 
-    .then( response => response.ok) 
+
