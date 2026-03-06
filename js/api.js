@@ -13,7 +13,7 @@ export async function fetchVideos() {
   const { data, error } = await supabase
     .from('videos')
     .select('*')
-    .order('date', { ascending: true });
+    .order('Date', { ascending: true });
 
   if (error) {
     console.error('Erreur fetchVideos:', error.message);
