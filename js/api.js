@@ -41,32 +41,28 @@ export async function insertVideo(video) {
 /**
  * Met à jour une vidéo existante par son id
  */
-export async function updateVideo(id, updates) {
-  const { data, error } = await supabase
-    .from('videos')
-    .update(updates)
-    .eq('id', id)
-    .select();
-
-  if (error) {
-    console.error('Erreur updateVideo:', error.message);
-    return null;
-  }
-  return data[0];
-}
+async function updateVideo(id, updates) { 
+  return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos?id=eq.'+ id, { 
+    method: 'PATCH', 
+    headers: { 
+      'Content-Type': 'application/json', 
+      'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq', 
+      'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq' }, 
+    body: JSON.stringify(updates) 
+  }) 
+    .then(r => r.json()) 
+    .then(data => console.log(data))}
 
 /**
  * Supprime une vidéo par son id
  */
-export async function deleteVideo(id) {
-  const { error } = await supabase
-    .from('videos')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Erreur deleteVideo:', error.message);
-    return false;
-  }
-  return true;
-}
+async function deleteVideo(id) { 
+  return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos?id=eq.'+ id, { 
+    method: 'DELETE', 
+    headers: { 
+      'Content-Type': 'application/json', 
+      'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq', 
+      'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq' 
+    }) 
+    .then( response => response.json()) 
+    .then(data => console.log(data))}
