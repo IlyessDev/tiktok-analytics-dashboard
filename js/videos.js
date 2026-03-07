@@ -144,10 +144,14 @@ export function saveEdit(onSuccess) {
   };
 
   updateVideo(editingId, updates)
-  .then(() => {
-    closeModal();
-    toast('✓ Vidéo modifiée !');
-    onSuccess();
+  .then(ok => {
+    if (ok) {
+      closeModal();
+      toast('✓ Vidéo modifiée !');
+      onSuccess();
+    } else {
+      toast('⚠ Erreur lors de la modification');
+    }
   })
 }
 
