@@ -1,6 +1,23 @@
 // On importe l'URL et les headers depuis config.js
 import { SUPABASE_URL, SUPABASE_HEADERS } from "./config.js";
 
+// LOGIN - récuperer le token
+export function login(email, password) {
+  return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/auth/v1/token?grant_type=password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq'
+    },
+    body: JSON.stringify({ email, password })
+  })
+  .then(r => r.json())
+  .then(data => {
+    localStorage.setItem('token', data.access_token)
+    return data
+  })
+}
+
 
 // READ — récupère toutes les vidéos triées par date
 export function fetchVideos() {
