@@ -33,4 +33,5 @@ export function renderVideos(videos) {
   empty.style.display = 'none';
   tbody.innerHTML = filtered.map(v => {
     const note = v.Notes
-      ? `<br><span style="color:var(--muted);font-size:.75rem">${v
+      ? `<br><span style="color:var(--muted);font-size:.75rem">${v.Notes.substring(0,50)}${v.Notes.length>50?'…':''}</span>`
+  : '';
