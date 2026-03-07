@@ -13,7 +13,11 @@ export function login(email, password) {
   })
   .then(r => r.json())
   .then(data => {
-    localStorage.setItem('token', data.access_token)
+    if (data.access_token) {
+    localStorage.setItem('token', data.access_token);
+  } else {
+    localStorage.removeItem('token'); // nettoie si erreur
+  }
     return data
   })
 }
