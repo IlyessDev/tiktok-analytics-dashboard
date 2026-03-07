@@ -28,7 +28,7 @@ export function insertVideo(video) {
 
 // UPDATE — modifie une vidéo par son id
 export function updateVideo(id, updates) {
-  return fetch(SUPABASE_URL +'/videos?id=eq.' + id, {
+  return fetch(SUPABASE_URL + '/videos?id=eq.' + id, {
     method: 'PATCH',
     headers: {
       ...SUPABASE_HEADERS,
@@ -37,8 +37,7 @@ export function updateVideo(id, updates) {
     },
     body: JSON.stringify(updates)
   })
-  .then(r => r.json())
-  .then(data => data[0])
+  .then(r => r.ok)
 }
 
 
