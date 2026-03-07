@@ -145,6 +145,7 @@ export function saveEdit(onSuccess) {
 
   updateVideo(editingId, updates)
     .then(result => {
+      console.log('result', result);
       if (result !== undefined) {
         closeModal();
         toast('✓ Vidéo modifiée !');
