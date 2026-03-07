@@ -1,11 +1,8 @@
-/**
- * config.js
- * Connexion à Supabase — point d'entrée unique pour la configuration API
- */
+// URL de base de l'API Supabase
+export const SUPABASE_URL = 'https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1';
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-const SUPABASE_URL = 'https://rrqhgcebyyiagfmuvwbq.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq';
-
-export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Clés d'authentification
+export const SUPABASE_HEADERS = {
+  'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq',
+  'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq'
+};
