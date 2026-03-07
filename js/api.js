@@ -1,20 +1,22 @@
+// On importe l'URL et les headers depuis config.js
+import { SUPABASE_URL, SUPABASE_HEADERS } from "./config.js";
+
+
+// READ — récupère toutes les vidéos triées par date
 export function fetchVideos() {
-  return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos?select=*&order=Date.asc', {
-    headers: {
-      'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq',
-      'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq'
-    }
+  return fetch(SUPABASE_URL + '/videos?select=*&order=Date.asc', {
+    headers: SUPABASE_HEADERS
   })
   .then(r => r.json())
 }
 
+// CREATE — ajoute une nouvelle vidéo
 export function insertVideo(video) {
-  return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos', {
+  return fetch(SUPABASE_URL +'/videos', {
     method: 'POST',
     headers: {
+      SUPABASE_HEADERS,
       'Content-Type': 'application/json',
-      'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq',
-      'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq',
       'Prefer': 'return=representation'
     },
     body: JSON.stringify(video)
@@ -23,13 +25,14 @@ export function insertVideo(video) {
   .then(data => data[0])
 }
 
+
+// UPDATE — modifie une vidéo par son id
 export function updateVideo(id, updates) {
-  return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos?id=eq.' + id, {
+  return fetch(SUPABASE_URL +'/videos?id=eq.' + id, {
     method: 'PATCH',
     headers: {
+      SUPABASE_HEADERS,
       'Content-Type': 'application/json',
-      'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq',
-      'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq',
       'Prefer': 'return=representation'
     },
     body: JSON.stringify(updates)
@@ -38,13 +41,12 @@ export function updateVideo(id, updates) {
   .then(data => data[0])
 }
 
+
+// DELETE — supprime une vidéo par son id
 export function deleteVideo(id) {
-  return fetch('https://rrqhgcebyyiagfmuvwbq.supabase.co/rest/v1/videos?id=eq.' + id, {
+  return fetch(SUPABASE_URL +'/videos?id=eq.' + id, {
     method: 'DELETE',
-    headers: {
-      'apikey': 'sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq',
-      'Authorization': 'Bearer sb_publishable_SVg5J0A-rQMRIMSGO8brqg_lOehnsCq'
-    }
+    headers: SUPABASE_HEADERS
   })
   .then(r => r.ok)
 }
