@@ -31,7 +31,7 @@ export function updateVideo(id, updates) {
   return fetch(SUPABASE_URL +'/videos?id=eq.' + id, {
     method: 'PATCH',
     headers: {
-      SUPABASE_HEADERS,
+      ...SUPABASE_HEADERS,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     },
