@@ -32,7 +32,7 @@ export function insertVideo(video) {
   return fetch(SUPABASE_URL +'/videos', {
     method: 'POST',
     headers: {
-      getHeaders(),
+      ...getHeaders(),
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     },
@@ -48,7 +48,7 @@ export function updateVideo(id, updates) {
   return fetch(SUPABASE_URL + '/videos?id=eq.' + id, {
     method: 'PATCH',
     headers: {
-       getHeaders(),
+       ...getHeaders(),
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     },
