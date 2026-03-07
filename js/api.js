@@ -15,7 +15,7 @@ export function insertVideo(video) {
   return fetch(SUPABASE_URL +'/videos', {
     method: 'POST',
     headers: {
-      SUPABASE_HEADERS,
+      ...SUPABASE_HEADERS,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     },
