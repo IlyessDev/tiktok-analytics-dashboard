@@ -1,5 +1,5 @@
 // On importe l'URL et les headers depuis config.js
-import { SUPABASE_URL, getHeaders() } from "./config.js";
+import { SUPABASE_URL, getHeaders } from "./config.js";
 
 // LOGIN - récuperer le token
 export function login(email, password) {
