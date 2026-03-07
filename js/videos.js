@@ -55,6 +55,7 @@ export function renderVideos(videos) {
   // Bouton supprimer
   tbody.querySelectorAll('.del-btn').forEach(btn => {
     btn.addEventListener('click', function() {
+      if (!window.isLoggedIn()) return window.openLoginModal('delete');
       const id = parseInt(this.getAttribute('data-id'));
       deleteVideo(id)
         .then(ok => {
@@ -71,6 +72,7 @@ export function renderVideos(videos) {
   // Bouton éditer
   tbody.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', function() {
+      if (!window.isLoggedIn()) return window.openLoginModal('edit');
       const id = parseInt(this.getAttribute('data-id'));
       const v = videos.find(v => v.id === id);
       if (v) openEdit(v);
