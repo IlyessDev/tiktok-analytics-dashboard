@@ -127,6 +127,7 @@ function openEdit(v) {
 }
 
 export function saveEdit(onSuccess) {
+  console.log('editingId:', editingId);
   const titre = document.getElementById('e-titre').value.trim();
   if (!titre) return toast('⚠ Titre obligatoire !');
 
