@@ -1,5 +1,5 @@
 // On importe l'URL et les headers depuis config.js
-import { SUPABASE_URL, SUPABASE_HEADERS } from "./config.js";
+import { SUPABASE_URL, getHeaders() } from "./config.js";
 
 // LOGIN - récuperer le token
 export function login(email, password) {
@@ -22,7 +22,7 @@ export function login(email, password) {
 // READ — récupère toutes les vidéos triées par date
 export function fetchVideos() {
   return fetch(SUPABASE_URL + '/videos?select=*&order=Date.asc', {
-    headers: SUPABASE_HEADERS
+    headers: getHeaders()
   })
   .then(r => r.json())
 }
@@ -32,7 +32,7 @@ export function insertVideo(video) {
   return fetch(SUPABASE_URL +'/videos', {
     method: 'POST',
     headers: {
-      ...SUPABASE_HEADERS,
+      ...getHeaders(),
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     },
@@ -48,7 +48,7 @@ export function updateVideo(id, updates) {
   return fetch(SUPABASE_URL + '/videos?id=eq.' + id, {
     method: 'PATCH',
     headers: {
-      ...SUPABASE_HEADERS,
+      ...getHeaders(),
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     },
@@ -62,7 +62,7 @@ export function updateVideo(id, updates) {
 export function deleteVideo(id) {
   return fetch(SUPABASE_URL +'/videos?id=eq.' + id, {
     method: 'DELETE',
-    headers: SUPABASE_HEADERS
+    headers: getHeaders()
   })
   .then(r => r.ok)
 }
