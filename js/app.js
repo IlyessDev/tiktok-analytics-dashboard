@@ -25,11 +25,11 @@ window.openLoginModal = function(reason) {
   else if (reason === 'edit')   msg.textContent = '⚠ Vous devez vous authentifier pour modifier une vidéo.';
   else if (reason === 'delete') msg.textContent = '⚠ Vous devez vous authentifier pour supprimer une vidéo.';
   else msg.textContent = '';
-  document.getElementById('login-modal').classList.add('active');
+  document.getElementById('login-modal').classList.add('open');
 };
 
 function closeLoginModal() {
-  document.getElementById('login-modal').classList.remove('active');
+  document.getElementById('login-modal').classList.remove('open');
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
 }
