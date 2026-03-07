@@ -17,6 +17,7 @@ let currentPage = 'dashboard';
 export function isLoggedIn() {
   return !!localStorage.getItem('token');
 }
+window.isLoggedIn = isLoggedIn;
 
 window.openLoginModal = function(reason) {
   const msg = document.getElementById('login-message');
