@@ -4,12 +4,20 @@ Projet personnel développé pour analyser et optimiser la stratégie de contenu
 Outil d'analyse et détection de patterns de performance pour créateurs de contenu.  
 Connecté à une base de donnée et exposé via API REST.
 
-![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
+## 🛠 Technologies
+
+- ![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
+- ![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white)
+- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+- ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
+- ![REST API](https://img.shields.io/badge/REST_API-FF6C37?style=flat&logo=postman&logoColor=white)
 
 🌐 **[Voir le site](https://ilyessdev.github.io/tiktok-analytics-dashboard)**
+
+## 🔐 Utilisation
+
+Le site est accessible publiquement en lecture seule.
+Les fonctionnalités d'ajout, modification et suppression sont réservées à l'administrateur.
 
 ## 🚀 Fonctionnalités
 
@@ -21,14 +29,6 @@ Connecté à une base de donnée et exposé via API REST.
 - **Insights automatiques** — analyse par casting, lieu, durée
 - **Interface responsive** — compatible mobile et desktop
 - **CRUD complet** — ajout, modification, suppression de vidéos (persisté en BDD)
-
-## 🛠 Technologies
-
-- HTML / CSS
-- JavaScript
-- Canvas API (graphiques custom)
-- Supabase (base de données PostgreSQL + API REST)
-- Google Fonts
 
 ## 📈 Aperçu des analyses
 
