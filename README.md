@@ -4,6 +4,8 @@ Projet personnel développé pour analyser et optimiser la stratégie de contenu
 Outil d'analyse et détection de patterns de performance pour créateurs de contenu.  
 Connecté à une base de donnée et exposé via API REST.
 
+🌐 **[Voir le site](https://ilyessdev.github.io/tiktok-analytics-dashboard)**
+
 ## 🛠 Technologies
 
 - ![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
@@ -11,8 +13,6 @@ Connecté à une base de donnée et exposé via API REST.
 - ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 - ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
 - ![REST API](https://img.shields.io/badge/REST_API-FF6C37?style=flat&logo=postman&logoColor=white)
-
-🌐 **[Voir le site](https://ilyessdev.github.io/tiktok-analytics-dashboard)**
 
 ## 🔐 Utilisation
 
