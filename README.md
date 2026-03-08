@@ -1,8 +1,8 @@
 # 📊 TikTok Analytics Dashboard
 
 Projet personnel développé pour analyser et optimiser la stratégie de contenu d'une chaîne TikTok.
-Outil d'analyse de performance pour créateurs de contenu.  
-Connecté à une base de données et exposé via API REST.
+Outil d'analyse et détection de patterns de performance pour créateurs de contenu.  
+Connecté à une base de donnée et exposé via API REST.
 
 ![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white)
@@ -29,11 +29,6 @@ Connecté à une base de données et exposé via API REST.
 - Canvas API (graphiques custom)
 - Supabase (base de données PostgreSQL + API REST)
 - Google Fonts
-
-## 💡 Contexte
-
-Projet personnel développé pour analyser et optimiser la stratégie de contenu d'une chaîne TikTok.  
-Les données sont stockées en base PostgreSQL et analysées pour détecter des patterns de performance.
 
 ## 📈 Aperçu des analyses
 
