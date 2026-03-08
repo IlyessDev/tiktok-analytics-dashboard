@@ -1,6 +1,6 @@
 # 📊 TikTok Analytics Dashboard
 
-Projet personnel développé pour analyser et optimiser la stratégie de contenu d'une chaîne TikTok.
+Projet personnel développé pour analyser et optimiser la stratégie de contenu d'une chaîne TikTok.                                          
 Outil d'analyse et détection de patterns de performance pour créateurs de contenu.  
 Connecté à une base de donnée et exposé via API REST.
 
