@@ -1,7 +1,15 @@
 # 📊 TikTok Analytics Dashboard
 
-Outil d'analyse de performance pour créateurs de contenu TikTok.  
-Connecté à une base de données en temps réel via Supabase.
+Projet personnel développé pour analyser et optimiser la stratégie de contenu d'une chaîne TikTok.
+Outil d'analyse de performance pour créateurs de contenu.  
+Connecté à une base de données et exposé via API REST.
+
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
+
+🌐 **[Voir le site](https://ilyessdev.github.io/tiktok-analytics-dashboard)**
 
 ## 🚀 Fonctionnalités
 
