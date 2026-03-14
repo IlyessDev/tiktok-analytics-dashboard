@@ -21,19 +21,19 @@ Les fonctionnalités d'ajout, modification et suppression sont réservées à l'
 
 ## 🚀 Fonctionnalités
 
-- **Dashboard KPIs** — vues totales, likes, partages, taux d'engagement moyen
-- **Détection Flop / Hit** — séquence visuelle et moyenne de flops avant un viral
-- **Analyse Momentum** — impact d'une vidéo virale sur la suivante
-- **Vélocité de publication** — délai entre vidéos et impact sur les vues
-- **Courbe d'évolution** — graphique Canvas custom avec ligne de moyenne
-- **Insights automatiques** — analyse par casting, lieu, durée
-- **Interface responsive** — compatible mobile et desktop
-- **CRUD complet** — ajout, modification, suppression de vidéos (persisté en BDD)
+- **Dashboard KPIs** - vues totales, likes, partages, taux d'engagement moyen
+- **Détection Flop / Hit** - séquence visuelle et moyenne de flops avant un viral
+- **Analyse Momentum** - impact d'une vidéo virale sur la suivante
+- **Vélocité de publication** - délai entre vidéos et impact sur les vues
+- **Courbe d'évolution** - graphique Canvas custom avec ligne de moyenne
+- **Insights automatiques** - analyse par casting, lieu, durée
+- **Interface responsive** - compatible mobile et desktop
+- **CRUD complet** - ajout, modification, suppression de vidéos (persisté en BDD)
 
 ## 📈 Aperçu des analyses
 
-- Ratio Flop/Hit et séquences de publication
-- Momentum post-viral
-- Corrélation durée/vues, lieu/vues, casting/vues
-- Score de régularité
-- Vélocité et impact des pauses de publication
+- Comparer le nombre de flops et de hits et voir l’ordre de publication
+- Regarder ce qui se passe après une vidéo virale
+- Comparer les vues selon la durée, le lieu et le casting
+- Vérifier si les publications sont régulières
+- Observer l’effet des pauses entre les publications
