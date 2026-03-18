@@ -31,7 +31,35 @@ export function fetchVideos() {
   .then(r => r.json())
 }
 
-// CREATE — ajoute une nouvelle vidéo
+// Stats par casting
+export function fetchStatsCasting() {
+  return fetch(SUPABASE_URL + '/vue_stats_casting?select=*', {
+    headers: getHeaders()
+  }).then(r => r.json())
+}
+
+// Stats par lieu
+export function fetchStatsLieu() {
+  return fetch(SUPABASE_URL + '/vue_stats_lieu?select=*', {
+    headers: getHeaders()
+  }).then(r => r.json())
+}
+
+// Top vidéos
+export function fetchTopVideos() {
+  return fetch(SUPABASE_URL + '/vue_top_videos?select=*&order=rang.asc', {
+    headers: getHeaders()
+  }).then(r => r.json())
+}
+
+// Momentum
+export function fetchMomentum() {
+  return fetch(SUPABASE_URL + '/vue_momentum?select=*', {
+    headers: getHeaders()
+  }).then(r => r.json())
+}
+
+// CREATE - ajoute une nouvelle vidéo
 export function insertVideo(video) {
   return fetch(SUPABASE_URL +'/videos', {
     method: 'POST',
@@ -47,7 +75,7 @@ export function insertVideo(video) {
 }
 
 
-// UPDATE — modifie une vidéo par son id
+// UPDATE - modifie une vidéo par son id
 export function updateVideo(id, updates) {
   return fetch(SUPABASE_URL + '/videos?id=eq.' + id, {
     method: 'PATCH',
@@ -62,7 +90,7 @@ export function updateVideo(id, updates) {
 }
 
 
-// DELETE — supprime une vidéo par son id
+// DELETE - supprime une vidéo par son id
 export function deleteVideo(id) {
   return fetch(SUPABASE_URL +'/videos?id=eq.' + id, {
     method: 'DELETE',
