@@ -22,10 +22,9 @@ export function login(email, password) {
   })
 }
 
-
-// READ — récupère toutes les vidéos triées par date
-export function fetchVideos() {
-  return fetch(SUPABASE_URL + '/videos?select=*&order=Date.asc', {
+// kpi
+export function fetchKPIs() {
+  return fetch(SUPABASE_URL + '/kpi?select=*', {
     headers: getHeaders()
   })
   .then(r => r.json())
@@ -58,6 +57,16 @@ export function fetchMomentum() {
     headers: getHeaders()
   }).then(r => r.json())
 }
+
+
+// READ — récupère toutes les vidéos triées par date
+export function fetchVideos() {
+  return fetch(SUPABASE_URL + '/videos?select=*&order=Date.asc', {
+    headers: getHeaders()
+  })
+  .then(r => r.json())
+}
+
 
 // CREATE - ajoute une nouvelle vidéo
 export function insertVideo(video) {
