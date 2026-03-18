@@ -33,7 +33,7 @@ export function fetchVideos() {
 
 // Stats par casting
 export function fetchStatsCasting() {
-  return fetch(SUPABASE_URL + '/vue_stats_casting?select=*', {
+  return fetch(SUPABASE_URL + '/vues_stats_casting?select=*', {
     headers: getHeaders()
   }).then(r => r.json())
 }
