@@ -9,6 +9,11 @@ import { renderDashboard } from './dashboard.js';
 import { renderVideos, addVideo, saveEdit, closeModal } from './videos.js';
 import { toast } from './utils.js';
 
+import { fetchStatsCasting } from './api.js';
+
+// test rapide — à supprimer après
+fetchStatsCasting().then(data => console.log(data));
+
 // ── ÉTAT GLOBAL ──
 let videos = [];
 let currentPage = 'dashboard';
