@@ -25,22 +25,17 @@ export function renderDashboard(videos) {
   renderTop5(sv);
 }
 
-/* ── KPIs ── */
-function renderKPIs(sv) {
-  const tv  = sv.reduce((s, v) => s + v.Vues, 0);
-  const tl  = sv.reduce((s, v) => s + v.Likes, 0);
-  const tp  = sv.reduce((s, v) => s + v.Partages, 0);
-  const avg = sv.length ? Math.round(tv / sv.length) : 0;
-  const best = sv.length ? sv.reduce((a, b) => a.Vues > b.Vues ? a : b) : null;
+/* - KPIs - */
+async function renderKPIs() {
+  const data = await fetchKPIs()
+  const k    = data[0]
 
   document.getElementById('kpi-row').innerHTML =
-    kpi('k-pink', 'Total Vues',    fmt(tv),  sv.length + ' vidéos') +
-    kpi('k-red',  'Total Likes',   fmt(tl),  '') +
-    kpi('k-blue', 'Partages',      fmt(tp),  '') +
-    kpi('k-green','Moy. Vues',     fmt(avg), 'par vidéo') +
-    kpi('k-yellow','Meilleure',
-      `<span style="font-size:.95rem;line-height:1.3">${best ? best.Titre.substring(0,18)+'…' : '—'}</span>`,
-      best ? fmt(best.Vues) + ' vues' : '');
+    kpi('k-pink','Total Vues',fmt(k.total_vues), '') +
+    kpi('k-red','Total Likes',fmt(k.total_likes),   '') +
+    kpi('k-blue','Partages',fmt(k.total_partages),'') +
+    kpi('k-green','Moy. Vues',fmt(k.moyenne_vues),  'par vidéo') +
+    kpi('k-yellow','Meilleure',`<span style="font-size:.95rem">${k.meilleure_video}</span>`,fmt(k.meilleure_vues) + ' vues')
 }
 
 function kpi(cls, label, val, sub) {
@@ -51,7 +46,7 @@ function kpi(cls, label, val, sub) {
   </div>`;
 }
 
-/* ── PERF CARDS ── */
+/* - PERF CARDS - */
 function renderPerfCards(sv) {
   const avg      = Math.round(sv.reduce((s,v)=>s+v.Vues,0)/sv.length);
   const first50  = sv.find(v => v.Vues >= 50000);
