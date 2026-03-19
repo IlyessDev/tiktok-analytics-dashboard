@@ -28,6 +28,7 @@ export function fetchKPIs() {
     headers: getHeaders()
   })
   .then(r => r.json())
+  console.log(r)
 }
 
 // Stats par casting
