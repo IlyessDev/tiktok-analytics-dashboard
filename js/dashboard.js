@@ -16,7 +16,7 @@ export function renderDashboard(videos) {
   const sv = [...videos].sort((a, b) => new Date(a.Date) - new Date(b.Date));
 
   updateHeaderCount(sv.length);
-  renderKPIs(sv);
+  renderKPIs();
   renderPerfCards(sv);
   renderVsRow(sv);
   renderChart(sv, Math.round(sv.reduce((s, v) => s + v.Vues, 0) / sv.length));
