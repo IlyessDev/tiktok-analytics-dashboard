@@ -5,7 +5,7 @@
 
 import { fmt, engRate, viralClass, badgeCasting, badgeLieu, updateHeaderCount } from './utils.js';
 import { renderChart } from './charts.js';
-import { fetchKpis } from './api.js';
+import { fetchKPIs } from './api.js';
 
 const HIT  = 50000;
 const FLOP = 15000;
