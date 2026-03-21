@@ -5,7 +5,7 @@
 
 import { fmt, engRate, viralClass, badgeCasting, badgeLieu, updateHeaderCount } from './utils.js';
 import { renderChart } from './charts.js';
-import { fetchKPIs, fetchStatsCasting, fetchStatsLieu, fetchStatsDuree } from './api.js';
+import { fetchKPIs, fetchStatsCasting, fetchStatsLieu, fetchStatsDuree, fetchTopVideos } from './api.js';
 
 const HIT  = 50000;
 const FLOP = 15000;
@@ -23,7 +23,7 @@ export function renderDashboard(videos) {
   renderChart(sv, Math.round(sv.reduce((s, v) => s + v.Vues, 0) / sv.length));
   renderAnalytics(sv);
   renderInsights();
-  renderTop5(sv);
+  renderTop5();
 }
 
 /*  KPIs  */
@@ -232,7 +232,7 @@ async function renderInsights() {
 }
 
 let statDuree = ''
-  for (const d of duree) {
+for (const d of duree) {
     const pct = Math.round(d.moyenne_vues / maxd * 100)
     statDuree += `<div class="insight-item">
       <span>${d.categorie_duree} (${d.nb_videos} vidéo${d.nb_videos > 1 ? 's' : ''})</span>
@@ -248,12 +248,18 @@ let statDuree = ''
 }
 
 /*  TOP 5  */
-function renderTop5(sv) {
-  const top = [...sv].sort((a,b)=>b.Vues-a.Vues).slice(0,5);
-  document.getElementById('top5').innerHTML = top.length
+
+async function renderTop5() {
+  const rank = await fetchTopVideos()
+  console.log(rank)
+
+  const top5 = rank.slice(0,5)
+  console.log(top5)
+
+    document.getElementById('top5').innerHTML = top5.length
     ? `<div class="table-wrap"><table>
         <thead><tr><th>#</th><th>Titre</th><th>Casting</th><th>Lieu</th><th>Vues</th><th>Eng.</th></tr></thead>
-        <tbody>${top.map((v,i) => `<tr>
+        <tbody>${top5.map((v,i) => `<tr>
           <td style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted)">${i+1}</td>
           <td>${v.Titre}</td>
           <td>${badgeCasting(v.Casting)}</td>
