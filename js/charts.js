@@ -10,7 +10,7 @@ import { fmt } from './utils.js';
  */
 export function renderChart(sv, avgVues) {
   const canvas = document.getElementById('chart-vues');
-  const W = canvas.parentElement.offsetWidth || 700;
+  const W = canvas.parentElement.getBoundingClientRect().width || 700;
   canvas.width = W;
   canvas.height = 220;
   const ctx = canvas.getContext('2d');

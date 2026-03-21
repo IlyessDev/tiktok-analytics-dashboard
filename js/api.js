@@ -28,7 +28,13 @@ export function fetchKPIs() {
     headers: getHeaders()
   })
   .then(r => r.json())
-  console.log(r)
+}
+
+// stats des duree
+export function fetchStatsDuree(){
+  return fetch(SUPABASE_URL + '/vue_stats_duree?select=*', {
+    headers: getHeaders()
+  }).then(r => r.json())
 }
 
 // Stats par casting

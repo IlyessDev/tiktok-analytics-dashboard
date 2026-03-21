@@ -5,7 +5,7 @@
 
 import { fmt, engRate, viralClass, badgeCasting, badgeLieu, updateHeaderCount } from './utils.js';
 import { renderChart } from './charts.js';
-import { fetchKPIs } from './api.js';
+import { fetchKPIs, fetchStatsCasting, fetchStatsLieu, fetchStatsDuree } from './api.js';
 
 const HIT  = 50000;
 const FLOP = 15000;
@@ -22,14 +22,14 @@ export function renderDashboard(videos) {
   renderVsRow(sv);
   renderChart(sv, Math.round(sv.reduce((s, v) => s + v.Vues, 0) / sv.length));
   renderAnalytics(sv);
-  renderInsights(sv);
+  renderInsights();
   renderTop5(sv);
 }
 
-/* - KPIs - */
+/*  KPIs  */
 async function renderKPIs() {
   const data = await fetchKPIs()
-  const k    = data[0]
+  const k = data[0]
 
   document.getElementById('kpi-row').innerHTML =
     kpi('k-pink','Total Vues',fmt(k.total_vues), '') +
@@ -47,7 +47,7 @@ function kpi(cls, label, val, sub) {
   </div>`;
 }
 
-/* - PERF CARDS - */
+/* PERF CARDS  */
 function renderPerfCards(sv) {
   const avg      = Math.round(sv.reduce((s,v)=>s+v.Vues,0)/sv.length);
   const first50  = sv.find(v => v.Vues >= 50000);
@@ -77,7 +77,7 @@ function perfCard(cls, label, val, sub) {
   </div>`;
 }
 
-/* ── 3 DERNIÈRES VS MOYENNE ── */
+/* 3 DERNIÈRES VS MOYENNE  */
 function renderVsRow(sv) {
   const avg  = Math.round(sv.reduce((s,v)=>s+v.Vues,0)/sv.length);
   const last3 = sv.slice(-3).reverse();
@@ -99,7 +99,7 @@ function renderVsRow(sv) {
   document.getElementById('vs-row').innerHTML = html;
 }
 
-/* ── ANALYTICS (flop/hit, momentum, vélocité) ── */
+/* ANALYTICS (flop/hit, momentum, vélocité)*/
 function renderAnalytics(sv) {
   document.getElementById('analytics-section').innerHTML =
     '<div class="sec-title">💀→🔥 Séquence Flop / Hit</div>' + renderFlopHit(sv) +
@@ -201,60 +201,53 @@ function renderVelocite(sv) {
   return html + '</div></div>';
 }
 
-/* ── INSIGHTS ── */
-function renderInsights(sv) {
-  if (sv.length < 2) {
-    document.getElementById('insights-grid').innerHTML = '<p style="color:var(--muted)">Ajoutez au moins 2 vidéos !</p>';
-    return;
-  }
-  const cm = {}, lm = {};
-  const dB  = { '< 20s': 0, '20-40s': 0, '40-60s': 0, '> 60s': 0 };
-  const dBV = { '< 20s': 0, '20-40s': 0, '40-60s': 0, '> 60s': 0 };
+/* INSIGHTS  */
+async function renderInsights() {
+  const casting = await fetchStatsCasting()
+  const lieu = await fetchStatsLieu()
+  const duree = await fetchStatsDuree()
+ 
+  const maxc = Math.max(...casting.map(v => v.moyenne_vues))
+  const maxl = Math.max(...lieu.map(v => v.moyenne_vues))
+  const maxd = Math.max(...duree.map(v => v.moyenne_vues))
 
-  sv.forEach(v => {
-    if (!cm[v.Casting]) cm[v.Casting] = { count: 0, vues: 0 };
-    cm[v.Casting].count++; cm[v.Casting].vues += v.Vues;
-    if (!lm[v.Lieu]) lm[v.Lieu] = { count: 0, vues: 0 };
-    lm[v.Lieu].count++; lm[v.Lieu].vues += v.Vues;
-    const k = v.Duree < 20 ? '< 20s' : v.Duree < 40 ? '20-40s' : v.Duree < 60 ? '40-60s' : '> 60s';
-    dB[k]++; dBV[k] += v.Vues;
-  });
-
-  const maxC = Math.max(...Object.values(cm).map(x => x.vues));
-  const maxL = Math.max(...Object.values(lm).map(x => x.vues));
-  const maxD = Math.max(...Object.values(dBV));
-
-  function rows(map, maxV, color) {
-    return Object.entries(map).sort((a,b)=>b[1].vues-a[1].vues).map(([k,v]) => {
-      const pct = maxV ? Math.round(v.vues / maxV * 100) : 0;
-      return `<div class="insight-item">
-        <span>${k} <span style="color:var(--muted);font-size:.75rem">(${v.count} vidéo${v.count>1?'s':''})</span></span>
-        <div class="insight-bar-wrap">
-          <div class="insight-bar" style="width:${pct}px;max-width:80px;background:${color}"></div>
-          <span class="insight-num">${fmt(v.vues)}</span>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  const dRows = Object.entries(dBV).filter(([k]) => dB[k] > 0).sort((a,b)=>b[1]-a[1]).map(([k,v]) => {
-    const pct = maxD ? Math.round(v / maxD * 100) : 0;
-    return `<div class="insight-item">
-      <span>${k} <span style="color:var(--muted);font-size:.75rem">(${dB[k]} vidéo${dB[k]>1?'s':''})</span></span>
-      <div class="insight-bar-wrap">
-        <div class="insight-bar" style="width:${pct}px;max-width:80px;background:var(--green)"></div>
-        <span class="insight-num">${fmt(v)}</span>
-      </div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('insights-grid').innerHTML =
-    `<div class="insight-card"><h4>🎭 Casting → Vues</h4>${rows(cm, maxC, 'var(--pink)')}</div>` +
-    `<div class="insight-card"><h4>📍 Lieu → Vues</h4>${rows(lm, maxL, 'var(--blue)')}</div>` +
-    `<div class="insight-card"><h4>⏱ Durée → Vues</h4>${dRows}</div>`;
+  let statCasting = ''
+  for (const d of casting) {
+    const pct = Math.round(d.moyenne_vues / maxc * 100)
+    statCasting += `<div class="insight-item">
+      <span>${d.Casting} (${d.nb_videos} vidéo${d.nb_videos > 1 ? 's' : ''})</span>
+      <div class="insight-bar" style="width:${pct}px;background:var(--pink)"></div>
+      <span class="insight-num">${fmt(d.moyenne_vues)}</span>
+    </div>`
 }
 
-/* ── TOP 5 ── */
+  let statLieu = ''
+  for (const d of lieu) {
+    const pct = Math.round(d.moyenne_vues / maxl * 100)
+    statLieu += `<div class="insight-item">
+      <span>${d.Lieu} (${d.nb_videos} vidéo${d.nb_videos > 1 ? 's' : ''})</span>
+      <div class="insight-bar" style="width:${pct}px;background:var(--blue)"></div>
+      <span class="insight-num">${fmt(d.moyenne_vues)}</span>
+    </div>`
+}
+
+let statDuree = ''
+  for (const d of duree) {
+    const pct = Math.round(d.moyenne_vues / maxd * 100)
+    statDuree += `<div class="insight-item">
+      <span>${d.categorie_duree} (${d.nb_videos} vidéo${d.nb_videos > 1 ? 's' : ''})</span>
+      <div class="insight-bar" style="width:${pct}px;background:var(--green)"></div>
+      <span class="insight-num">${fmt(d.moyenne_vues)}</span>
+    </div>`
+}
+
+  document.getElementById('insights-grid').innerHTML =
+    `<div class="insight-card"><h4>🎭 Casting → Vues</h4>${statCasting}</div>` +
+    `<div class="insight-card"><h4>📍 Lieu → Vues</h4>${statLieu}</div>` +
+    `<div class="insight-card"><h4>⏱ Durée → Vues</h4>${statDuree}</div>`
+}
+
+/*  TOP 5  */
 function renderTop5(sv) {
   const top = [...sv].sort((a,b)=>b.Vues-a.Vues).slice(0,5);
   document.getElementById('top5').innerHTML = top.length

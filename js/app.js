@@ -9,16 +9,12 @@ import { renderDashboard } from './dashboard.js';
 import { renderVideos, addVideo, saveEdit, closeModal } from './videos.js';
 import { toast } from './utils.js';
 
-import { fetchStatsCasting } from './api.js';
 
-// test rapide — à supprimer après
-fetchStatsCasting().then(data => console.log(data));
-
-// ── ÉTAT GLOBAL ──
+// ÉTAT GLOBAL
 let videos = [];
 let currentPage = 'dashboard';
 
-// ── AUTH ──
+
 export function isLoggedIn() {
   return !!localStorage.getItem('token');
 }
@@ -50,7 +46,7 @@ function updateNavLogin() {
   }
 }
 
-// ── LOGIN EVENTS ──
+// LOGIN
 document.getElementById('btn-login').addEventListener('click', async () => {
   const email = document.getElementById('login-email').value;
   const password = document.getElementById('login-password').value;
@@ -68,7 +64,7 @@ document.getElementById('login-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('login-modal')) closeLoginModal();
 });
 
-// ── NAVIGATION ──
+// NAVIGATION
 window.showPage = function(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -80,7 +76,7 @@ window.showPage = function(name) {
   if (name === 'videos')    renderVideos(videos);
 };
 
-// ── CHARGEMENT DES DONNÉES ──
+// CHARGEMENT DES DONNÉES
 async function loadData() {
   showLoading(true);
   videos = await fetchVideos();
@@ -90,13 +86,13 @@ async function loadData() {
   if (currentPage === 'videos')    renderVideos(videos);
 }
 
-// ── RECHARGEMENT (appelé après ajout/modif/suppression) ──
+// RECHARGEMENT (appelé après ajout/modif/suppression)
 window.reloadVideos = async function() {
   await loadData();
   window.showPage(currentPage);
 };
 
-// ── FORMULAIRE AJOUT ──
+// FORMULAIRE AJOUT
 document.getElementById('btn-add').addEventListener('click', () => {
   if (!isLoggedIn()) return openLoginModal('add');
   addVideo(async () => {
@@ -105,7 +101,7 @@ document.getElementById('btn-add').addEventListener('click', () => {
   });
 });
 
-// ── MODALE ÉDITION ──
+// MODALE ÉDITION
 document.getElementById('btn-save-edit').addEventListener('click', () => {
   saveEdit(() => loadData());
 });
@@ -114,18 +110,18 @@ document.getElementById('edit-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('edit-modal')) closeModal();
 });
 
-// ── FILTRES VIDÉOS ──
+// FILTRES VIDÉOS
 document.getElementById('filter-casting').addEventListener('change', () => renderVideos(videos));
 document.getElementById('filter-lieu').addEventListener('change',    () => renderVideos(videos));
 document.getElementById('filter-sort').addEventListener('change',    () => renderVideos(videos));
 
-// ── HELPERS ──
+// HELPERS
 function showLoading(show) {
   const loader = document.getElementById('loader');
   if (loader) loader.style.display = show ? 'block' : 'none';
 }
 
-// ── INIT ──
+// INIT
 document.getElementById('f-date').valueAsDate = new Date();
 updateNavLogin();
 loadData();

@@ -4,7 +4,7 @@ import { insertVideo, updateVideo, deleteVideo } from './api.js';
 // id de la vidéo en cours d'édition
 let editingId = null;
 
-// ── AFFICHAGE DE LA LISTE ──
+// AFFICHAGE DE LA LISTE
 export function renderVideos(videos) {
   const casting = document.getElementById('filter-casting').value;
   const lieu    = document.getElementById('filter-lieu').value;
@@ -80,7 +80,7 @@ export function renderVideos(videos) {
   });
 }
 
-// ── AJOUT ──
+// AJOUT
 export function addVideo(onSuccess) {
   const titre = document.getElementById('f-titre').value.trim();
   const duree = parseInt(document.getElementById('f-duree').value);
@@ -113,7 +113,7 @@ export function addVideo(onSuccess) {
     })
 }
 
-// ── ÉDITION ──
+// ÉDITION
 function openEdit(v) {
   editingId = v.id;
   document.getElementById('e-titre').value    = v.Titre;
