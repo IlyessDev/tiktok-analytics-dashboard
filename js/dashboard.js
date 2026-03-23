@@ -14,8 +14,7 @@ const FLOP = 15000;
  * Point d'entrée principal du dashboard
  */
 export function renderDashboard(videos) {
-  const sv = [...videos].sort((a, b) => new Date(a.Date) - new Date(b.Date));
-
+  const sv = [...videos]
   updateHeaderCount(sv.length);
   renderKPIs();
   renderPerfCards(sv);
@@ -49,21 +48,21 @@ function kpi(cls, label, val, sub) {
 
 /* PERF CARDS  */
 function renderPerfCards(sv) {
-  const avg      = Math.round(sv.reduce((s,v)=>s+v.Vues,0)/sv.length);
-  const first50  = sv.find(v => v.Vues >= 50000);
+  const avg = Math.round(sv.reduce((s,v)=>s+v.Vues,0)/sv.length);
+  const first50 = sv.find(v => v.Vues >= 50000);
   const first100 = sv.find(v => v.Vues >= 100000);
-  const idx50    = first50  ? sv.indexOf(first50)  + 1 : null;
-  const idx100   = first100 ? sv.indexOf(first100) + 1 : null;
-  const above    = sv.filter(v => v.Vues >= avg).length;
-  const score    = Math.round(above / sv.length * 100);
+  const idx50 = first50  ? sv.indexOf(first50)  + 1 : null;
+  const idx100 = first100 ? sv.indexOf(first100) + 1 : null;
+  const above = sv.filter(v => v.Vues >= avg).length;
+  const score = Math.round(above / sv.length * 100);
   const scoreClass = score >= 50 ? 'good' : score >= 30 ? 'warn' : 'bad';
 
-  const last5  = sv.slice(-5).reduce((s,v)=>s+v.Vues,0) / 5;
+  const last5 = sv.slice(-5).reduce((s,v)=>s+v.Vues,0) / 5;
   const first5 = sv.slice(0,5).reduce((s,v)=>s+v.Vues,0) / 5;
-  const prog   = Math.round((last5 - first5) / first5 * 100);
+  const prog = Math.round((last5 - first5) / first5 * 100);
 
   document.getElementById('perf-grid').innerHTML =
-    perfCard(first50  ? 'good' : 'bad',  '⚡ 1ère vidéo +50k',  first50  ? 'Vidéo #'+idx50  : 'Pas encore', first50  ? first50.Titre  : 'Continuez !') +
+    perfCard(first50  ? 'good' : 'bad',  '⚡ 1ère vidéo +50k',  first50  ? 'Vidéo #'+idx50  : 'Pas encore', first50  ? first50.Titre  : 'Continue !') +
     perfCard(first100 ? 'good' : 'warn', '🚀 1ère vidéo +100k', first100 ? 'Vidéo #'+idx100 : 'Pas encore', first100 ? first100.Titre : 'Bientôt !') +
     perfCard(scoreClass, '📊 Score régularité', score + '%', above + ' vidéos sur ' + sv.length + ' au-dessus de la moyenne (' + fmt(avg) + ')') +
     perfCard('', '📈 Progression', (prog >= 0 ? '+' : '') + prog + '%', 'Moy. 5 dernières vs 5 premières');
@@ -251,10 +250,8 @@ for (const d of duree) {
 
 async function renderTop5() {
   const rank = await fetchTopVideos()
-  console.log(rank)
 
   const top5 = rank.slice(0,5)
-  console.log(top5)
 
     document.getElementById('top5').innerHTML = top5.length
     ? `<div class="table-wrap"><table>
